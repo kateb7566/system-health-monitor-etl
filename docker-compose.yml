@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  health_monitor:
+    build: .
+    container_name: health_monitor
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis:
+        condition: service_started
+      - postgres:
+        condition: service_healthy
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DB_URL=postgresql+asyncpg://kateb7566:123456@postgres:5432/kateb_pipeline
+
+  postgres:
+    image: postgres:17.5-bookworm
+    container_name: postgres_health_pipeline
+    restart: always
+    environment:
+      - POSTGRES_USER=kateb7566
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=health_monitor_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg-isready -U kateb7566"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data: /var/lib/postgresql/postgres_data
+  
+  redis:
+    image: redis:7-alpine
+    container_name: redis_health_cache
+    restart: always
+    ports:
+      - "6379:6379"
+volumes:
+  postgres_data:
