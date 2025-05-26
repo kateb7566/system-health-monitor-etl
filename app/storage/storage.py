@@ -1,6 +1,7 @@
 # Third-party imports
-from sqlalchemy.ext.esyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext import SQLAlchemyError
+from sqlalchemy.future import select
 
 # Built-in imports
 import json
@@ -25,7 +26,6 @@ class Storage:
                 disk = json.dumps(data['disk']),
                 net_io = json.dumps(data['net_io'])
             )
-            Storage.metrics_id += 1
             await db.add(record)
             await db.commit()
             logger.info(f"Record saved to DB")
@@ -43,5 +43,13 @@ class Storage:
             logger.error(f'Error fetching data from DB: {e}')
             return []
     
-    # async def get_record_from_db():
-    #     pass
+    async def get_record_from_db(self, db: AsyncSession, record_id: int):
+        result = await db.execute(select(MetricsModel)).where(MetricsModel.id == record_id)
+        record = result.scalar_one_or_none()
+        if not record:
+            logger.warning("record could not be retrieved!")
+            return None
+        logger.info("Record has been retrieved!")
+        return record
+    
+storage = Storage()
