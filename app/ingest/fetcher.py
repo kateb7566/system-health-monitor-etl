@@ -2,10 +2,12 @@
 import asyncio
 from datetime import datetime
 import psutil
+import json
 
 # local imports
 from app.utils.logger import get_logger
 from app.config import settings
+from app.ingest.publisher import publisher as pub
 
 logger = get_logger(__name__)
 
@@ -37,7 +39,9 @@ class Fetcher:
         while retries < self.retries:
             try:
                 # get system health data
-                metrics = await self.system_data()
+                
+                metrics = await self.fetch_metrics()
+                await pub.publish("metrics-channel", json.dumps(metrics))
                 return metrics
             except Exception as e:
                 logger.error(f"attempt {retries}: Could not get data! {e}")
