@@ -9,7 +9,7 @@ from app.utils.logger import get_logger
 import asyncio
 from fastapi import FastAPI
 from app.api.routes import router as api_router
-from app.api.real_time_ws import listen_channel as ws_router
+from app.api.real_time_ws import router as ws_router
 
 app = FastAPI()
 

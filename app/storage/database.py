@@ -1,5 +1,5 @@
 # Third-party imports
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import sessionmaker
 
 # local imports
@@ -11,7 +11,7 @@ engine = create_async_engine(DB_URL, echo=True)
 
 
 # Create an async session factory
-AsyncSessionLocal = sessionmaker(
+AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
     expire_on_commit=False
@@ -19,5 +19,5 @@ AsyncSessionLocal = sessionmaker(
 
 # Dependency-like context manager
 async def get_db_session() -> AsyncSession:
-    async with AsyncSessionLocal as session:
+    async with AsyncSessionLocal() as session:
         yield session

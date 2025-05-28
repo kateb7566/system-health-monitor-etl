@@ -1,6 +1,6 @@
 # Built-in imports
 from typing import Any, List, Dict
-from datetime import datetime
+from datetime import datetime, timezone
 
 # local imports
 from app.utils.logger import get_logger
@@ -43,7 +43,7 @@ class Transformer:
             return dt.isoformat()
         except Exception as e:
             logger.warning(f"Warning: Failed to parse datetime from value: {value}")
-        return datetime.utcnow().isoformat()
+        return datetime.now(timezone.utc).isoformat()
         
     def is_valid(self, item: Dict[str, Any]) -> bool:
         return bool(item['time_stamp'] and item['cpu_percent'] and item['memory'] and item['disk'] and item['net_io'])

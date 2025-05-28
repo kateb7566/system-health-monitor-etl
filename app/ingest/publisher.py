@@ -3,7 +3,7 @@ import redis.asyncio as redis
 
 from app.utils.logger import get_logger
 
-logger = get_logger()
+logger = get_logger(__name__)
 
 class Publisher:
     def __init__(self, redis_url: str = "redis://localhost:6379"):

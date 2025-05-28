@@ -23,7 +23,7 @@ class MetricsModel(Base):
 class Metrics(BaseModel):
     id: int = Field(..., description="Unique identifier of the Metrics model")
     time_stamp: datetime = Field(..., description="Timestamp of the taken out metrics!", alias="timestamp")
-    cpu_percent: dict = Field(..., description="CPU percentage")
+    cpu_percent: float = Field(..., description="CPU percentage")
     memory: dict = Field(..., description="Memory Usage - RAM")
     disk: dict = Field(..., description="Disk Usage")
     net_io: dict = Field(..., description="Net IO Usage")

@@ -1,6 +1,6 @@
 # Third-party imports
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
 
 # Built-in imports

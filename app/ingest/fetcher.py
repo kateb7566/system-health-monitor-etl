@@ -1,6 +1,6 @@
 # imports
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 import psutil
 import json
 
@@ -26,7 +26,7 @@ class Fetcher:
         
         logger.info("the system data has been successfully collected!")
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "cpu_percent": psutil.cpu_percent(interval=None),
             "memory": psutil.virtual_memory()._asdict(),
             "disk": psutil.disk_usage('/')._asdict(),
