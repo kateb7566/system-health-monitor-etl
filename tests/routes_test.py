@@ -45,11 +45,11 @@ async def test_get_record_found(mock_get_record):
 
 
 @pytest.mark.asyncio
-@patch("app.storage.storage.Storage.get_record_from_db", new_callable=AsyncMock)
+@patch("app.storage.storage.storage.get_record_from_db", new_callable=AsyncMock)
 async def test_get_record_not_found(mock_get_record):
     mock_get_record.return_value = None
 
-    async with AsyncClient(transport=ASGITransport(router), base_url="http://test") as ac:
+    async with AsyncClient(transport=ASGITransport(test_app), base_url="http://test") as ac:
         response = await ac.get("/record/999")
 
     assert response.status_code == status.HTTP_404_NOT_FOUND

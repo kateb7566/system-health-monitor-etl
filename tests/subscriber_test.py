@@ -68,12 +68,16 @@ class TestSubscriber:
     @pytest.mark.asyncio
     async def test_close(self, subscriber, mock_redis):
         """Test connection closing"""
-        _, mock_pubsub = mock_redis
+        mock_instance_redis, mock_pubsub = mock_redis
+        
+        # assign the mocks to the subscriber
+        subscriber.pubsub = mock_pubsub
+        subscriber.redis = mock_instance_redis
         
         await subscriber.close()
         
         mock_pubsub.close.assert_awaited_once()
-        subscriber.redis.close.assert_awaited_once()
+        mock_instance_redis.close.assert_awaited_once()
 
     @pytest.mark.asyncio
     async def test_default_redis_url(self):
