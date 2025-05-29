@@ -1,3 +1,4 @@
+# The `Storage` class provides methods for saving, retrieving, and accessing data from a database asynchronously using SQLAlchemy in a Python application.
 # Third-party imports
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
@@ -33,6 +34,7 @@ class Storage:
             await db.rollback()
             logger.error(f"Database error: {e}")
         except Exception as e:
+            await db.rollback()
             logger.error(f"Unexpected error: {e}")
     
     async def get_data_from_db(self, db: AsyncSession):
@@ -44,7 +46,7 @@ class Storage:
             return []
     
     async def get_record_from_db(self, db: AsyncSession, record_id: int):
-        result = await db.execute(select(MetricsModel)).where(MetricsModel.id == record_id)
+        result = await db.execute(select(MetricsModel).where(MetricsModel.id == record_id))
         record = result.scalar_one_or_none()
         if not record:
             logger.warning("record could not be retrieved!")

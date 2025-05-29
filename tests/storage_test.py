@@ -27,7 +27,7 @@ async def test_save_to_db_success(storage, fake_data):
 
 
 @pytest.mark.asyncio
-async def test_save_to_db_sqlalchemy_error(storage, fake_data, monkeypatch):
+async def test_save_to_db_sqlalchemy_error(storage, fake_data):
     db = AsyncMock()
     
     # Simulate SQLAlchemyError during commit
